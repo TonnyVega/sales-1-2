@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+ 
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>index</title>
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico"> -->
+
+  
+   {% block body%}
+
+<body>
+  <!-- button trigger modal -->
+  <div class="text-center">
+    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        Add Item
+    </button>
+</div>
+<!-- {{rows}} -->
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Add Modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+       <div class="modal-body">
+        <form action="/products" method="POST">
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"> Name</label>
+                <input type="text" class="form-control" name="product_name" id="exampleFormControlInput1"
+                    placeholder="eg.Iphone 13 pro">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">quantity</label>
+              <input type="number" class="form-control" name="price" id="exampleFormControlInput1">
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">price</label>
+            <input type="number" class="form-control" name="quantity" id="exampleFormControlInput1">
+        </div>
+        <div>
+          <button type="submit" class="btn btn-dark" data-bs-dismiss="modal">Submit</button>
+      </div>
+      </form>
+     </div>
+     <div class="modal-footer">
+       <button type="button" class="btn btn-info" data-bs-dismiss="modal">Close</button>
+       </div>
+     </div>
+    </div>
+  </div>
+
+
+
+  
+ <div class="container mt-3">
+  <div class="col-11">
+      <table class="table" id="example">
+          <thead>
+              <tr>
+                  <th scope="col">product_id</th>
+                  <th scope="col">product_name</th>
+                  <th scope="col">price</th>
+                  <th scope="col">quantity</th>
+                  <th scope="col">Sale<i class="fa fa-usd" aria-hidden="true"></i></th>
+                  <th> Show Sale</th>
+                  <th scope="col">Edit</th>
+                  <!-- <th scope="col">Delete</th> -->
+              </tr>
+          </thead>
+          <tbody>
+              {% for i in rows %}
+              <tr>
+                  <td scope="row">{{i[0]}}</td>
+                  <td>{{i[1]}}</td>
+                  <td>{{i[2]}}</td>
+                  <td>{{i[3]}}</td>
+                  <td>{{i[4]}}</td>
+                  <td>
+                      <!-- Button trigger modal -->
+                      <div class="text-center">
+                          <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                              data-bs-target="#staticBackdrop1{{i[0]}}">
+                              Make Sale
+                          </button>
+                      </div>
+                      <!-- {{rows}} -->
+                      <!-- Modal -->
+                      <div class="modal fade" id="staticBackdrop1{{i[0]}}" data-bs-backdrop="static"
+                          data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                          aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="staticBackdropLabel">Sale Modal</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                          aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form action="/sales" method="POST">
+                                          <div class="mb-3">
+                                              <input type="hidden" value="{{i[0]}}" name="product_id">
+                                          </div>
+                                          <div class="mb-3">
+                                              <input type="hidden" value="{{i[1]}}" name="product_name">
+                                          </div>
+                                          <div class="mb-3">
+                                              <label for=" " class="form-label">Quantity</label>
+                                              <input type="text" class="form-control" name="quantity"
+                                                  id="quantity">
+                                          </div>
+                                          <div>
+                                              <button type="submit" class="btn btn-dark"
+                                                  data-bs-dismiss="modal">Submit</button>
+                                          </div>
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-info"
+                                          data-bs-dismiss="modal">Close</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </td>
+                  <td>
+                      <div class="text-center">
+                          <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                              data-bs-target="#staticBackdrop2{{i[0]}}" link-style="none">
+                              <a href="/sales/{{i[0]}}">View Sale</a></button>
+                      </div>
+                  </td>
+                  <td>
+                      <!-- Button trigger modal -->
+                      <div class="text-center">
+                          <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                              data-bs-target="#staticBackdrop3{{i[0]}}">
+                              <a href="/products/{{i[0]}}">Edit Sale</a>
+                          </button>
+                      </div>
+                      <!-- {{rows}} -->
+                      <!-- Modal -->
+                      <div class="modal fade" id="staticBackdrop3{{i[0]}}" data-bs-backdrop="static"
+                          data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                          aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="staticBackdropLabel3">Edit Sale Modal</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                          aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form action="/sales" method="POST">
+                                          <div class="mb-3">
+                                              <input type="hidden" value="{{i[0]}}" name="sales_id">
+                                          </div>
+                                          <div class="mb-3">
+                                              <input type="hidden" value="{{i[1]}}" name="product_name">
+                                          </div>
+                                          <div class="mb-3">
+                                              <label for=" " class="form-label">Quantity</label>
+                                              <input type="text" class="form-control" name="quantity"
+                                                  id="quantity">
+                                          </div>
+                                          <div class="mb-3">
+                                            <label for=" " class="form-label">Price</label>
+                                            <input type="number" class="form-control" name="price"
+                                            id="price">
+                                          </div>
+                                          <div>
+                                         
+                                              <button type="submit" class="btn btn-dark"
+                                                  data-bs-dismiss="modal">Submit</button>
+                                          </div>
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-info"
+                                          data-bs-dismiss="modal">Close</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                   </td>
+  </div>
+
+
+  {% endfor %}
+</div>
+</div>
+</div>
+
+    {% endblock %}
+    {% block footer %}
+
+    {% endblock %}
+    <footer class="container py-5">
+      <div class="row">
+        <div class="col-12 col-md">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mb-2"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
+          <small class="d-block mb-3 text-muted">&copy; 2022</small>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Features</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Cool stuff</a></li>
+            <li><a class="text-muted" href="#">Random feature</a></li>
+            <li><a class="text-muted" href="#">Team feature</a></li>
+            <li><a class="text-muted" href="#">Stuff for developers</a></li>
+            <li><a class="text-muted" href="#">Another one</a></li>
+            <li><a class="text-muted" href="#">Last time</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Resources</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Resource</a></li>
+            <li><a class="text-muted" href="#">Resource name</a></li>
+            <li><a class="text-muted" href="#">Another resource</a></li>
+            <li><a class="text-muted" href="#">Final resource</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>Resources</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Business</a></li>
+            <li><a class="text-muted" href="#">Education</a></li>
+            <li><a class="text-muted" href="#">Government</a></li>
+            <li><a class="text-muted" href="#">Gaming</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md">
+          <h5>About</h5>
+          <ul class="list-unstyled text-small">
+            <li><a class="text-muted" href="#">Team</a></li>
+            <li><a class="text-muted" href="#">Locations</a></li>
+            <li><a class="text-muted" href="#">Privacy</a></li>
+            <li><a class="text-muted" href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+
+    <!-- footer end -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ"
+    crossorigin="anonymous"></script>
+<script src="/static/Javascript/main.js"></script>
+</body>
+    
+      
+
+
+
+
