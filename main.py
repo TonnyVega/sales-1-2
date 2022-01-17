@@ -16,7 +16,11 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 # ensure we are not tracking all modifications to the database.
 app.permanent_session_lifetime=timedelta(minutes=5)
 # this is to determine how long a session data is kept.
-conn = psycopg2.connect("dbname='my_market' user='postgres' password='tony' host='localhost' port='5433'")
+conn = psycopg2.connect(user='ldbwnrvvijnoop',
+                        password='87bc8a1093591d5219158ed15a6d3225b1f1ef27dd0395d2a496f560d24c5d83',
+                        host='ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
+                        port='5432',
+                        database='d33chu23k06set')
 
 
 
