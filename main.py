@@ -22,7 +22,9 @@ conn = psycopg2.connect(user='ldbwnrvvijnoop',
                         port='5432',
                         database='d33chu23k06set')
 
-
+cur = conn.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS products(product_id SERIAL, product_name VARCHAR(255) NOT NULL,price INT NOT NULL,quantity INT,PRIMARY KEY(product_id)")
+cur.execute("CREATE TABLE IF NOT EXISTS sales(sales_id SERIAL,product_id INT,product_name VARCHAR(100),quantity INT,created_at NOT NULL DEFAULT NOW(), PRIMARY KEY(sales_id), CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id))")
 
 
 db = SQLAlchemy(app)
