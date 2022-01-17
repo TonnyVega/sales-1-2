@@ -24,7 +24,7 @@ conn = psycopg2.connect(user='ldbwnrvvijnoop',
 
 cur = conn.cursor()
 cur.execute("CREATE TABLE IF NOT EXISTS products(product_id SERIAL PRIMARY KEY, product_name VARCHAR(255),price INT NOT NULL,quantity INT NOT NULL)")
-cur.execute("CREATE TABLE IF NOT EXISTS sales(sales_id SERIAL PRIMARY KEY ,product_id INT,product_name VARCHAR(100),quantity INT,created_at NOT NULL DEFAULT NOW())")
+cur.execute("CREATE TABLE IF NOT EXISTS sales(sales_id SERIAL PRIMARY KEY ,product_id INT,product_name VARCHAR(100),quantity INT,created_at DATE NOT NULL DEFAULT NOW())")
 
 
 db = SQLAlchemy(app)
