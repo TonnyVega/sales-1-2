@@ -58,6 +58,10 @@
     </div>
   </div>
 
+  <!-- edit products -->
+
+                   
+                            
 
 
   
@@ -70,14 +74,13 @@
                   <th scope="col">product_name</th>
                   <th scope="col">price</th>
                   <th scope="col">quantity</th>
-                  <th scope="col">Sale<i class="fa fa-usd" aria-hidden="true"></i></th>
-                  <th> Show Sale</th>
-                  <th scope="col">Edit</th>
+                  <th scope="col">Sale</th>
+                  <th scope="col"> Show Sale</th>
                   <!-- <th scope="col">Delete</th> -->
               </tr>
           </thead>
           <tbody>
-              {% for i in rows %}
+            {% for i in rows %}
               <tr>
                   <td scope="row">{{i[0]}}</td>
                   <td>{{i[1]}}</td>
@@ -114,7 +117,7 @@
                                           </div>
                                           <div class="mb-3">
                                               <label for=" " class="form-label">Quantity</label>
-                                              <input type="text" class="form-control" name="quantity"
+                                              <input type="number" class="form-control" name="quantity"
                                                   id="quantity">
                                           </div>
                                           <div>
@@ -139,65 +142,70 @@
                       </div>
                   </td>
                   <td>
-                      <!-- Button trigger modal -->
-                      <div class="text-center">
-                          <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                              data-bs-target="#staticBackdrop3{{i[0]}}">
-                              <a href="/products/{{i[0]}}">Edit Sale</a>
-                          </button>
-                      </div>
-                      <!-- {{rows}} -->
-                      <!-- Modal -->
-                      <div class="modal fade" id="staticBackdrop3{{i[0]}}" data-bs-backdrop="static"
-                          data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                          aria-hidden="true">
-                          <div class="modal-dialog">
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                      <h5 class="modal-title" id="staticBackdropLabel3">Edit Sale Modal</h5>
-                                      <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                          aria-label="Close"></button>
-                                  </div>
-                                  <div class="modal-body">
-                                      <form action="/sales" method="POST">
-                                          <div class="mb-3">
-                                              <input type="hidden" value="{{i[0]}}" name="sales_id">
-                                          </div>
-                                          <div class="mb-3">
-                                              <input type="hidden" value="{{i[1]}}" name="product_name">
-                                          </div>
-                                          <div class="mb-3">
-                                              <label for=" " class="form-label">Quantity</label>
-                                              <input type="text" class="form-control" name="quantity"
-                                                  id="quantity">
-                                          </div>
-                                          <div class="mb-3">
-                                            <label for=" " class="form-label">Price</label>
-                                            <input type="number" class="form-control" name="price"
-                                            id="price">
-                                          </div>
-                                          <div>
-                                         
-                                              <button type="submit" class="btn btn-dark"
-                                                  data-bs-dismiss="modal">Submit</button>
-                                          </div>
-                                      </form>
-                                  </div>
-                                  <div class="modal-footer">
-                                      <button type="button" class="btn btn-info"
-                                          data-bs-dismiss="modal">Close</button>
-                                  </div>
-                              </div>
+                       <!-- Button trigger modal -->
+                       <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        edit products
+                     </button>
+  
+                     <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                     <h5 class="modal-title" id="exampleModalLabel">edit products</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                     </div>
+                     <div class="modal-body">
+                         <form action="/product" method="POST">
+
+                          <div class="mb-3">
+                            <label class="form-label" >product_id</label>
+                            <input type="number" value="{{i[0]}}" class="form-control" name="product_id"
+                                id="product_id">
+                            </div>
+                            <div class="mb-3">
+                            <label class="form-label">product_name</label>
+                            <input type="text" class="form-control" name="product_name"
+                                id="product_name">
+                            </div>
+                            <div>
+                            <label class="form-label">Price</label>
+                            <input type="number" class="form-control" name="price"
+                                id="price">
+                                 </div>
+                                 
+                            <div class="mb-3">
+                            <label class="form-label">quantity</label>
+                            <input type="number" class="form-control" name="quantity"
+                                        id="quantity">
+                                         </div>
+                                
+                                        
+                            <div>
+                            <button type="submit" class="btn btn-dark"
+                            data-bs-dismiss="modal">Submit</button>
+                            </div>
+                            </form>
+                             </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
                           </div>
-                      </div>
-                   </td>
-  </div>
+                    </div>
+                    </div>
+                    </div>
+                  </td>
+            
+                  
+                </tr>   
+            
+            {% endfor %}
+            </tbody>
+        </div>
+</div>
+</div>
+</div>
 
-
-  {% endfor %}
-</div>
-</div>
-</div>
 
     {% endblock %}
     {% block footer %}
