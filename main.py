@@ -51,8 +51,7 @@ class users(db.Model):
 
 @app.route('/')
 def index():
-    user_name="Vega Tech"
-    return render_template('index.html',user_name=user_name)
+    return render_template('index.html')
     
 
 
