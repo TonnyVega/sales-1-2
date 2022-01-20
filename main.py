@@ -23,8 +23,8 @@ conn = psycopg2.connect(user='ldbwnrvvijnoop',
                         database='d33chu23k06set')
 
 cur = conn.cursor()
-# cur.execute("CREATE TABLE IF NOT EXISTS products(product_id SERIAL PRIMARY KEY, product_name VARCHAR(255),price INT NOT NULL,quantity INT NOT NULL)")
-# cur.execute("CREATE TABLE IF NOT EXISTS sales(sales_id SERIAL PRIMARY KEY ,product_id INT,product_name VARCHAR(100),quantity INT,created_at DATE NOT NULL DEFAULT NOW())")
+cur.execute("CREATE TABLE IF NOT EXISTS products(product_id SERIAL PRIMARY KEY NOT NULL, product_name VARCHAR(255),selling_price INT NOT NULL,buying_price INT NOT NULL,quantity_remaining INT NOT NULL")
+cur.execute("CREATE TABLE IF NOT EXISTS sales(sales_id SERIAL PRIMARY KEY NOT NULL,product_id INT,product_name VARCHAR(100),quantity_sold INT,created_at DATE NOT NULL DEFAULT NOW(),CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id)")
 
 
 db = SQLAlchemy(app)
@@ -246,13 +246,13 @@ def insights():
 
 
 
-@app.route('/delete')
-def delete():
-    cur=conn.cursor()
-    cur.execute("""DROP TABLE sales""")
-    cur.execute("""DROP TABLE sales""")
-    conn.commit()
-    return redirect(url_for('/'))
+# @app.route('/delete')
+# def delete():
+#     cur=conn.cursor()
+#     cur.execute("""DROP TABLE sales""")
+#     cur.execute("""DROP TABLE sales""")
+#     conn.commit()
+#     return redirect(url_for('/'))
     
 
 if __name__ == '__main__':
