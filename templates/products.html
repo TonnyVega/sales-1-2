@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-
-<!-- <!DOCTYPE html>
+<!-- 
+<!DOCTYPE html>
 <html lang="en">
 <head>
  
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>index</title>
     <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico"> -->
 
@@ -34,18 +34,22 @@
        <div class="modal-body">
         <form action="/products" method="POST">
             <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label"> Name</label>
+                <label for="exampleFormControlInput1" class="form-label">product_name</label>
                 <input type="text" class="form-control" name="product_name" id="exampleFormControlInput1"
                     placeholder="eg.Iphone 13 pro">
             </div>
             <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">quantity</label>
-              <input type="number" class="form-control" name="price" id="exampleFormControlInput1">
+              <label for="exampleFormControlInput1" class="form-label">selling_price</label>
+              <input type="number" class="form-control" name="selling_price" id="exampleFormControlInput1">
           </div>
           <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">price</label>
-            <input type="number" class="form-control" name="quantity" id="exampleFormControlInput1">
+            <label for="exampleFormControlInput1" class="form-label">buying_price</label>
+            <input type="number" class="form-control" name="buying_price" id="exampleFormControlInput1">
         </div>
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">quantity_remaining</label>
+          <input type="number" class="form-control" name="quantity_remaining" id="exampleFormControlInput1">
+      </div>
         <div>
           <button type="submit" class="btn btn-dark" data-bs-dismiss="modal">Submit</button>
       </div>
@@ -72,8 +76,9 @@
               <tr>
                   <th scope="col">product_id</th>
                   <th scope="col">product_name</th>
-                  <th scope="col">price</th>
-                  <th scope="col">quantity</th>
+                  <th scope="col">selling_price</th>
+                  <th scope="col">buying_price</th>
+                  <th scope="col">quantity_remaining</th>
                   <th scope="col">Sale</th>
                   <th scope="col"> Show Sale</th>
                   <!-- <th scope="col">Delete</th> -->
@@ -169,16 +174,21 @@
                                 id="product_name">
                             </div>
                             <div>
-                            <label class="form-label">Price</label>
-                            <input type="number" class="form-control" name="price"
+                            <label class="form-label">selling_price</label>
+                            <input type="number" class="form-control" name="selling_price"
                                 id="price">
-                                 </div>
+                            </div>
+                            <div>
+                                <label class="form-label">buying_price</label>
+                                <input type="number" class="form-control" name="buying_price"
+                                      id="price">
+                            </div>
                                  
                             <div class="mb-3">
                             <label class="form-label">quantity</label>
-                            <input type="number" class="form-control" name="quantity"
+                            <input type="number" class="form-control" name="quantity_remaining"
                                         id="quantity">
-                                         </div>
+                            </div>
                                 
                                         
                             <div>

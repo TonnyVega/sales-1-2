@@ -132,16 +132,17 @@ def products():
     if request.method=="POST":
         cur=conn.cursor()
         name=request.form["product_name"]
-        price=request.form["price"]
-        quantity=request.form["quantity"]
+        s_price=request.form["selling_price"]
+        b_price=request.form["buying_price"]
+        quantity_r=request.form["quantity_remaining"]
 
-        cur.execute(""" INSERT INTO products(product_name,quantity,price) VALUES (%(name)s,%(price)s,%(quantity)s)""",{"name":name,"price":price,"quantity":quantity})
+        cur.execute(""" INSERT INTO products(product_name,quantity_remaining,buying_price,selling_price) VALUES (%(name)s,%(s_price)s,%(b_price)s,%(quantity_r)s)""",{"name":name,"selling_price":s_price,"buying_price":b_price,"quantity_remaining":quantity_r})
         conn.commit()
         return redirect("/products")
 
     else:
         cur=conn.cursor()
-        cur.execute("""SELECT product_id, product_name, price, quantity FROM products""")
+        cur.execute("""SELECT product_id, product_name, selling_price,buying_price, quantity FROM products""")
         rows=cur.fetchall()
     return render_template('products.html',rows=rows)
 
