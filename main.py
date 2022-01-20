@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 
+
 app= Flask(__name__)
 app.secret_key="tonny"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
@@ -23,8 +24,8 @@ conn = psycopg2.connect(user='ldbwnrvvijnoop',
                         database='d33chu23k06set')
 
 cur = conn.cursor()
-cur.execute("CREATE TABLE IF NOT EXISTS products(product_id SERIAL PRIMARY KEY NOT NULL, product_name VARCHAR(255),selling_price INT NOT NULL,buying_price INT NOT NULL,quantity_remaining INT NOT NULL")
-cur.execute("CREATE TABLE IF NOT EXISTS sales(sales_id SERIAL PRIMARY KEY NOT NULL,product_id INT,product_name VARCHAR(100),quantity_sold INT,created_at DATE NOT NULL DEFAULT NOW()")
+cur.execute("CREATE TABLE IF NOT EXISTS products(product_id SERIAL PRIMARY KEY NOT NULL, product_name VARCHAR(255),selling_price INT NOT NULL,buying_price INT NOT NULL,quantity_remaining INT NOT NULL)")
+cur.execute("CREATE TABLE IF NOT EXISTS sales(sales_id SERIAL PRIMARY KEY NOT NULL,product_id INT,product_name VARCHAR(100),quantity_sold INT,created_at DATE NOT NULL DEFAULT NOW())")
 
 
 db = SQLAlchemy(app)
@@ -257,6 +258,5 @@ def insights():
 
 if __name__ == '__main__':
     # if not os.path.exists('db.sqlite'):
-        db.create_all()
-#    creates this database if it doesn't exist.
-        app.run(debug=True)
+    db.create_all()
+    app.run(debug=True)
