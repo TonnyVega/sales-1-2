@@ -142,7 +142,7 @@ def products():
 
     else:
         cur=conn.cursor()
-        cur.execute("""SELECT product_id, product_name, selling_price,buying_price, quantity FROM products""")
+        cur.execute("""SELECT product_id, product_name, selling_price,buying_price, quantity_remaining FROM products""")
         rows=cur.fetchall()
     return render_template('products.html',rows=rows)
 
