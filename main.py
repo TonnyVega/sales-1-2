@@ -24,7 +24,7 @@ conn = psycopg2.connect(user='ldbwnrvvijnoop',
                         database='d33chu23k06set')
 
 cur = conn.cursor()
-cur.execute("CREATE TABLE IF NOT EXISTS products(product_id SERIAL PRIMARY KEY, product_name VARCHAR(255),selling_price INT NOT NULL,buying_price INT NOT NULL,quantity_remaining INT NOT NULL)")
+cur.execute("CREATE TABLE IF NOT EXISTS products(product_id SERIAL PRIMARY KEY, product_name VARCHAR(255),selling_price INT NOT NULL,buying_price INT NOT NULL,quantity INT NOT NULL)")
 cur.execute("CREATE TABLE IF NOT EXISTS sales(sales_id SERIAL PRIMARY KEY ,product_id INT,product_name VARCHAR(100),quantity_sold INT,created_at DATE NOT NULL DEFAULT NOW())")
 
 
@@ -132,17 +132,17 @@ def products():
     if request.method=="POST":
         cur=conn.cursor()
         name=request.form["product_name"]
-        s_price=request.form["selling_price"]
-        b_price=request.form["buying_price"]
-        quantity_r=request.form["quantity_remaining"]
+        selling_price=request.form["selling_price"]
+        buying_price=request.form["buying_price"]
+        quantity=request.form["quantity"]
 
-        cur.execute(""" INSERT INTO products(product_name,quantity_remaining,buying_price,selling_price) VALUES (%(name)s,%(s_price)s,%(b_price)s,%(quantity_r)s)""",{"name":name,"selling_price":s_price,"buying_price":b_price,"quantity_remaining":quantity_r})
+        cur.execute(""" INSERT INTO products(product_name,buying_price,selling_price,quantity) VALUES (%(name)s,%(selling_price)s,%(buying_price)s,%(quantity)s)""",{"name":name,"selling_price":selling_price,"buying_price":buying_price,"quantity":quantity})
         conn.commit()
         return redirect("/products")
 
     else:
         cur=conn.cursor()
-        cur.execute("""SELECT product_id, product_name, selling_price,buying_price, quantity_remaining FROM products""")
+        cur.execute("""SELECT product_id, product_name, selling_price,buying_price, quantity FROM products""")
         rows=cur.fetchall()
     return render_template('products.html',rows=rows)
 
@@ -174,7 +174,7 @@ def sales():
 
         if b>=0:
             cur.execute(""" UPDATE products SET quantity=%(b)s WHERE product_id=%(r)s AND product_name=%(t)s""",{"b":b,"r":r,"t":t})
-            cur.execute("""INSERT INTO sales(product_id,product_name,quantity) VALUES(%(r)s,%(t)s,%(q)s)""",{"r":r,"t":t,"q":q})
+            cur.execute("""INSERT INTO sales(product_id,product_name,quantity_sold) VALUES(%(r)s,%(t)s,%(q)s)""",{"r":r,"t":t,"q":q})
             conn.commit()
             return redirect(url_for('sales'))
 
@@ -184,7 +184,7 @@ def sales():
 @app.route('/sales/<int:x>')
 def view_sales(x):
     cur=conn.cursor()
-    cur.execute("""SELECT sales_id,product_id,product_name,quantity,created_at FROM sales WHERE product_id= %(product_id)s""", {"product_id":x})
+    cur.execute("""SELECT sales_id,product_id,product_name,quantity_sold,created_at FROM sales WHERE product_id= %(product_id)s""", {"product_id":x})
     x=cur.fetchall()
     return render_template('sales.html', rows=x)
     
@@ -208,11 +208,34 @@ def edit_products():
 
     return redirect(url_for('products'))
      
-       
-@app.route('/phones') 
-def phones():
-    return render_template('phones.html')
-          
+
+@app.route('/stock',methods=['POST','GET'])
+def profit():
+    if request.method=='post':
+        cur=conn.cursor()
+        p_id=request.form['product_id']
+        name=request.form['product_name']
+        sold=request.form['quantity_sold']
+        bp=request.form['buying_price']
+        sp=request.form['selling_price']
+        cur.execute(""" SELECT products.product_id=%(p_id)s, products.product_name=%(name)s,sales.quantity_sold=%(sold)s,selling_price=%(sp)s,buying_price=%(bp)s from products join sales ON products.product_id = sales.product_id""",{"p_id":p_id,"name":name,"sold":sold,"sp":sp,"bp":bp})
+        cur.fetchall()
+        prof= int(sp-bp)
+        print(prof)
+
+        if sp>bp:
+            prof=sp-bp
+            print("you have a profit of",prof)
+
+        elif bp<sp:
+            loss= bp-sp
+            print("you have a loss of",loss)
+        else:
+            print("you have made neither a profit or a loss")
+
+        return render_template('stock.html')
+
+
 
     
     
