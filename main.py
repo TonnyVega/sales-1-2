@@ -165,7 +165,7 @@ def sales():
         r=request.form['product_id']
         t=request.form['product_name']
         q=request.form["quantity"]
-        # e=request.form["sales_id"]
+        
         cur.execute("""SELECT quantity FROM products WHERE product_id=%(r)s AND product_name=%(t)s""",{"r":r,"t":t})
         y=cur.fetchone()
         q=int(q)
@@ -198,9 +198,10 @@ def edit_products():
     cur = conn.cursor()
     v=request.form["product_id"]
     n=request.form['product_name']
-    y=request.form["price"]
+    y=request.form["selling_price"]
+    bp=request.form["buying_price"]
     q=request.form['quantity']
-    cur.execute("""UPDATE products SET product_name=%(n)s, price =%(y)s , quantity = %(q)s WHERE product_id=%(v)s;""",{"v":v,"n":n,"y":y,"q":q})
+    cur.execute("""UPDATE products SET product_name=%(n)s, selling_price =%(y)s, buying_price=%(bp)s , quantity = %(q)s WHERE product_id=%(v)s;""",{"v":v,"n":n,"y":y,"q":q,"bp":bp})
     conn.commit()
     
    
@@ -210,30 +211,36 @@ def edit_products():
      
 
 @app.route('/stock',methods=['POST','GET'])
-def profit():
-    if request.method=='post':
-        cur=conn.cursor()
-        p_id=request.form['product_id']
-        name=request.form['product_name']
-        sold=request.form['quantity_sold']
-        bp=request.form['buying_price']
-        sp=request.form['selling_price']
-        cur.execute(""" SELECT products.product_id=%(p_id)s, products.product_name=%(name)s,sales.quantity_sold=%(sold)s,selling_price=%(sp)s,buying_price=%(bp)s from products join sales ON products.product_id = sales.product_id""",{"p_id":p_id,"name":name,"sold":sold,"sp":sp,"bp":bp})
-        cur.fetchall()
-        prof= int(sp-bp)
-        print(prof)
+def stock():
+    cur=conn.cursor()
+    cur.execute(""" SELECT products.product_id, products.product_name,sales.quantity_sold,selling_price,buying_price from products join sales ON products.product_id = sales.product_id""")
+    cur.fetchall()
+    return render_template('stock.html')
 
-        if sp>bp:
-            prof=sp-bp
-            print("you have a profit of",prof)
+#     if request.method=='post':
+#         cur=conn.cursor()
+#         p_id=request.form['product_id']
+#         name=request.form['product_name']
+#         sold=request.form['quantity_sold']
+#         bp=request.form['buying_price']
+#         sp=request.form['selling_price']
+#         cur.execute(""" SELECT products.product_id=%(p_id)s, products.product_name=%(name)s,sales.quantity_sold=%(sold)s,selling_price=%(sp)s,buying_price=%(bp)s from products join sales ON products.product_id = sales.product_id""",{"p_id":p_id,"name":name,"sold":sold,"sp":sp,"bp":bp})
+#         cur.fetchall()
+#         prof= int(sp-bp)
+#         print(prof)
+    
 
-        elif bp<sp:
-            loss= bp-sp
-            print("you have a loss of",loss)
-        else:
-            print("you have made neither a profit or a loss")
+#         if sp>bp:
+#             prof=sp-bp
+#             print("you have a profit of",prof)
 
-        return render_template('stock.html')
+#         elif bp<sp:
+#             loss= bp-sp
+#             print("you have a loss of",loss)
+#         else:
+#             print("you have made neither a profit or a loss")
+
+#         return render_template('stock.html')
 
 
 
