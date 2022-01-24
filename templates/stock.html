@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- js -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="/static/css/footer.css">
+    
+    <title>STOCKS</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color:black;
+            font-family: sans-serif;
+        }
+        .table-container{
+            padding:0 10%;
+            margin:40px auto 0;
+        }
+        .heading{
+            font-size: 40px;
+            text-align: center;
+            color:gold;
+            margin-bottom: 40px;
+        }
+        .table{
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table thead tr th{
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.35px;
+            color: goldenrod;
+            opacity: 1;
+            padding: 12px;
+            vertical-align: top;
+            border:1px solid #dee2e685 ;
+        }
+        .table tbody tr td{
+            font-size: 14px;
+            letter-spacing: 00.35px;
+            font-weight: normal;
+            color: goldenrod;
+            background-color:black;
+            padding: 8px;
+            text-align: center;
+            border:1px solid #dee2e685
+        }
+        .table tbody tr td .btn{
+            width: 130px;
+            text-decoration: none;
+            line-height: 35px;
+            display:inline-block;
+            background-color: #4d1bc4;
+            font-weight: medium;
+            color: #FFFFFF;
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            font-size: 14px;
+            opacity: 1;
+        }
+
+
+    /* .table, .table tbody, .table tr, .table td{
+        display: block;
+        width: 100%;
+    }
+    .table tr{
+        margin-bottom: 15px;
+    }
+    .table tbody tr td{
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+    .table td:before{
+        content:attr(data-label);
+        position:absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 15px;
+        font-weight: 600;
+        font-size: 14px;
+        text-align: left;
+    } */
+
+
+
+
+    </style>
+  </head>
+  <body>
+      {%block content %}
+    <h1>STOCK TABLE</h1>
+
+
+ 
+   <!-- table -->
+            <div class="table-container">
+                <h1 class="heading">STOCK TABLE </h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"> product_ID</th>
+                            <th scope="col">product_name</th>
+                            <th scope="col">quantity_remaining</th>
+                            <th scope="col">quantity_sold</th>
+                            <th scope="col">buying_price</th>
+                            <th scope="col"> selling_price</th>
+                            <th scope="col">profit/loss</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in rows %}
+                        <tr>
+                            <td scope="row" data-label="product_id">{{i[0]}}}</td>
+                            <td data-label="sales_id">{{i[1]}}</td>
+                            <td data-label="product_name">{{i[2]}}</td>
+                            <td data-label="buying_price">{{i[3]}}</td>
+                            <td data-label="selling_price">{{i[4]}}</td>
+                            <td data-label="quantity_sold">{{i[5]}}</td>
+                            <td data-label="profit/loss">
+                                <!-- Button trigger modal -->
+                <div class="text-center">                   
+<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#statickBackdrop1{{i[0]}}">
+   <a href="/stock/{{i[0]}}"></a> profit
+  </button>
+</div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop1{{i[0]}}"data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">profit/loss</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="/stock" method="POST">
+                <div class="mb-3">
+                    <input type="hidden" value="{{i[0]}}" name="product_id">
+                </div>
+                <div class="mb-3">
+                    <input type="hidden" value="{{i[1]}}" name="product_name">
+                </div>
+                <div class="mb-3">
+                    <label for=" " class="form-label">quantity_sold</label>
+                    <input type="number" class="form-control" name="quantity_sold"
+                        id="quantity_sold">
+                </div>
+                <div class="mb-3">
+                    <label for=" " class="form-label">buying_price</label>
+                    <input type="number" class="form-control" name="buying_price"
+                        id="buying_price">
+                </div>
+                <div class="mb-3">
+                    <label for=" " class="form-label">selling_price</label>
+                    <input type="number" class="form-control" name="selling_price"
+                        id="selling_price">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-dark"
+                        data-bs-dismiss="modal">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+                            </td>
+
+                                
+                            
+                            
+                           
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+
+  <!-- table end -->
+    <!-- footer -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="footer-cta pt-5 pb-5">
+                <div class="row">
+                    <div class="col-xl-4 col-md-4 mb-30">
+                        <div class="single-cta">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="cta-text">
+                                <h4>Find us</h4>
+                                <span>1010 Avenue, sw 54321, chandigarh</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-4 mb-30">
+                        <div class="single-cta">
+                            <i class="fas fa-phone"></i>
+                            <div class="cta-text">
+                                <h4>Call us</h4>
+                                <span>9876543210 0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-4 mb-30">
+                        <div class="single-cta">
+                            <i class="far fa-envelope-open"></i>
+                            <div class="cta-text">
+                                <h4>Mail us</h4>
+                                <span>mail@info.com</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-content pt-5 pb-5">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 mb-50">
+                        <div class="footer-widget">
+                            <div class="footer-logo">
+                                <a href="index.html"><img src="/static/images/favicon.ico" class="img-fluid" alt="logo"></a>
+                            </div>
+                            <div class="footer-text">
+                                <p>Lorem ipsum dolor sit amet, consec tetur adipisicing elit, sed do eiusmod tempor incididuntut consec tetur adipisicing
+                                elit,Lorem ipsum dolor sit amet.</p>
+                            </div>
+                            <div class="footer-social-icon">
+                                <span>Follow us</span>
+                                <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
+                                <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
+                                <a href="#"><i class="fab fa-google-plus-g google-bg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 mb-30">
+                        <div class="footer-widget">
+                            <div class="footer-widget-heading">
+                                <h3>Useful Links</h3>
+                            </div>
+                            <ul>
+                                <li><a href="#">Home</a></li>
+                                <li><a href="#">about</a></li>
+                                <li><a href="#">services</a></li>
+                                <li><a href="#">portfolio</a></li>
+                                <li><a href="#">Contact</a></li>
+                                <li><a href="#">About us</a></li>
+                                <li><a href="#">Our Services</a></li>
+                                <li><a href="#">Expert Team</a></li>
+                                <li><a href="#">Contact us</a></li>
+                                <li><a href="#">Latest News</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
+                        <div class="footer-widget">
+                            <div class="footer-widget-heading">
+                                <h3>Subscribe</h3>
+                            </div>
+                            <div class="footer-text mb-25">
+                                <p>Don’t miss to subscribe to our new feeds, kindly fill the form below.</p>
+                            </div>
+                            <div class="subscribe-form">
+                                <form action="#">
+                                    <input type="text" placeholder="Email Address">
+                                    <button><i class="fab fa-telegram-plane"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 text-center text-lg-left">
+                        <div class="copyright-text">
+                            <p>Copyright &copy; 2022, All Right Reserved <a href="https://tony-c-ndirangu.herokuapp.com">VEGA</a></p>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 d-none d-lg-block text-right">
+                        <div class="footer-menu">
+                            <ul>
+                                <li><a href="#">Home</a></li>
+                                <li><a href="#">Terms</a></li>
+                                <li><a href="#">Privacy</a></li>
+                                <li><a href="#">Policy</a></li>
+                                <li><a href="#">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer -->
+    
+
+
+
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+    {%endblock%}
+  </body>
+</html>
