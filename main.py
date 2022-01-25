@@ -23,6 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 
 
 
+
 # users here refers to the table we reffer to.
 # app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 # ensure we are not tracking all modifications to the database.
@@ -42,6 +43,10 @@ db = SQLAlchemy(app)
 @app.before_first_request
 def create_tables():
     db.create_all()
+    create_database(app)
+    db.init_app(app)
+
+
 
 
 login_manager= LoginManager()
@@ -69,6 +74,7 @@ class User(db.Model, UserMixin):
     notes = db.relationship('Note') #user.id is the primary key you're reffering to from the parent table.
 def create_database(app):
     db.create_all(app=app)
+    print('created db')
 
 
 
@@ -85,6 +91,7 @@ def create_database(app):
 
 
 @app.route('/')
+@login_required
 def index():
     return render_template('index.html')
     
@@ -106,7 +113,13 @@ def login():
                 flash('Incorrect password, try again.', category='error')
         else:
             flash('email does not exist', category='error')
-    return render_template('login.html')  
+    return render_template('login.html', user=current_user)  
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
 
 
 
@@ -139,15 +152,11 @@ def sign_up():
             flash('Account created. WELCOME TO VEGA TECH!', category='success')
             return redirect(url_for('index'))
 
-    return render_template("sign_up.html")
+    return render_template("sign_up.html", user=current_user)
 
 
 
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for("login"))
+
 
 
 
