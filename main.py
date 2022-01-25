@@ -5,7 +5,8 @@ import psycopg2
 from werkzeug.utils import redirect
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, LoginManager, login_user,login_required,logout_user,current_user
+from flask_login import UserMixin, login_user,login_required,logout_user,current_user
+from flask_login import LoginManager
 from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash, check_password_hash #for storing a password in a secure way. hash func has no inverse.
 
