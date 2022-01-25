@@ -44,13 +44,15 @@ def create_tables():
     db.create_all()
 
 
-login_manager = LoginManager()
+login_manager= LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
+
 
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -147,40 +149,6 @@ def sign_up():
 def logout():
     logout_user()
     return redirect(url_for("login"))
-  
-
-
-    
-
-
-@app.route("/user", methods=["POST","GET"])   
-def user():
-    email= None
-    if "user" in session:
-        user=session["user"]
-
-        if request.method =="POST":
-            email = request.form["email"]
-            session["email"]= email
-# to save the email into the database. 
-            found_user = users.query.filter_by(name=user).first()
-            found_user.email=email
-            db.session.commit()
-            flash("Email was saved!")
-        else:
-            if "email" in session:
-                email=session["email"]
-        return render_template("user.html",email=email)
-    else:
-        flash("You Are Not Logged In! Please Login to Continue.")
-        return redirect(url_for("login"))
-
-
-
-
-
-
-
 
 
 
