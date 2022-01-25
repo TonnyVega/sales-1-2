@@ -1,22 +1,32 @@
 from itertools import product
+from unicodedata import category
 from flask import Flask, redirect, render_template, request, url_for, session,flash
 import psycopg2
 from werkzeug.utils import redirect
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, LoginManager, login_user,login_required,logout_user,current_user
+from sqlalchemy.sql import func
+from werkzeug.security import generate_password_hash, check_password_hash #for storing a password in a secure way. hash func has no inverse.
 
 
 
 
 
 app= Flask(__name__)
-app.secret_key="tonny"
+
+
+app.config['SECRET_KEY']='tony_vega'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+
+
+
+
+
 # users here refers to the table we reffer to.
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 # ensure we are not tracking all modifications to the database.
-app.permanent_session_lifetime=timedelta(minutes=5)
-# this is to determine how long a session data is kept.
+
 conn = psycopg2.connect(user='ldbwnrvvijnoop',
                         password='87bc8a1093591d5219158ed15a6d3225b1f1ef27dd0395d2a496f560d24c5d83',
                         host='ec2-54-74-60-70.eu-west-1.compute.amazonaws.com',
@@ -33,17 +43,39 @@ db = SQLAlchemy(app)
 def create_tables():
     db.create_all()
 
-class users(db.Model):
-    _id =db.Column("id",db.Integer, primary_key=True)
-    # this is each model will have an id which is an int, unique (primary_key=true) means we will be refferencing each model with this key.
-    # Every row needs to have an Id.
-    name= db.Column(db.String(100))
-    email = db.Column(db.String(100))
 
-    def __init__(self,name,email):   #for values with no values, like gender, or status.
-        self.name= name
-        self.email= email
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.init_app(app)
 
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+class Note(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    data = db.Column(db.String(10000))
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True)
+    password = db.Column(db.String(150))
+    first_name = db.Column(db.String(150))
+    notes = db.relationship('Note') #user.id is the primary key you're reffering to from the parent table.
+def create_database(app):
+    db.create_all(app=app)
+
+
+
+
+
+
+    
+   
+   
 
 
 
@@ -51,40 +83,73 @@ class users(db.Model):
 
 
 @app.route('/')
+@login_required
 def index():
     return render_template('index.html')
     
 
 
-@app.route("/login", methods=["POST","GET"])
+@app.route("/login", methods=['GET','POST'])
 def login():
-    if request.method=="POST":
-        session.permanent=True
-        # to ensure the session lasts for determined time. meaning once logged in the data will remain for the time in timedelta.
-        user= request.form["nm"]
-        session["user"]=user
+    if request.method=='POST':
+        email= request.form.get('email')
+        password=request.form.get('password')
 
-# below we filter all logged in users by name incase they are already logged in.
-        found_user=users.query.filter_by(name=user).first()
-        if found_user:
-            session["email"]= found_user.email
-        
+        user=User.query.filter_by(email=email).first()
+        if user:
+            if check_password_hash(user.password,password):
+                flash("Logged in successfully!", category='success')
+                login_user(user, remember=True)
+                return redirect(url_for('index'))
+            else:
+                flash('Incorrect password, try again.', category='error')
         else:
-            usr= users(user, "")
-            db.session.add(usr)
+            flash('email does not exist', category='error')
+    return render_template('login.html')  
+
+
+
+@app.route("/sign_up", methods=["GET","POST"])
+def sign_up():
+
+    if request.method== 'POST':
+        email= request.form.get('email')
+        first_name= request.form.get('firstName')
+        password1= request.form.get('password1')
+        password2= request.form.get('password2')
+
+        user=User.query.filter_by(email=email).first()
+        if user:
+            flash('email already exists')
+
+        elif len(email)< 4:
+            flash("EMAIL must have more than 4 characters!", category='error!')
+        elif len(first_name)< 2:
+             flash("name must have more than 2 characters!", category='error!')
+        elif password1 != password2:
+             flash("password does not match", category='error!')
+        elif len (password1) < 7:
+             flash("password is too short, it must be 8 characters or above", category='error!')
+        else:
+            new_user= User(email=email, first_name=first_name,password=generate_password_hash(password1, method='sha256'))
+            db.session.add(new_user)
             db.session.commit()
+            login_user(user, remember=True)
+            flash('Account created. WELCOME TO VEGA TECH!', category='success')
+            return redirect(url_for('index'))
+
+    return render_template("sign_up.html")
 
 
-        flash("Login successful!")
-        return redirect(url_for("user"))
-        # essentially this returns us to the user page
-    else:
-        if "user" in session:
-            flash("Already Logged In!")
-            return redirect(url_for("user"))
-            # this keeps user logged in.
-            # if user logs out, they have to login again.
-        return render_template("login.html")
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+  
+
+
     
 
 
@@ -112,14 +177,7 @@ def user():
 
 
 
-@app.route("/logout")
-def logout():
-    flash("you have been logged out!", "info")
-    session.pop("user", None)
-    session.pop("email",None)
-    # this removes user data from sessions.
-    return redirect(url_for("login"))
-  
+
 
 
 
@@ -217,30 +275,32 @@ def stock():
     cur.fetchall()
     return render_template('stock.html')
 
-#     if request.method=='post':
-#         cur=conn.cursor()
-#         p_id=request.form['product_id']
-#         name=request.form['product_name']
-#         sold=request.form['quantity_sold']
-#         bp=request.form['buying_price']
-#         sp=request.form['selling_price']
-#         cur.execute(""" SELECT products.product_id=%(p_id)s, products.product_name=%(name)s,sales.quantity_sold=%(sold)s,selling_price=%(sp)s,buying_price=%(bp)s from products join sales ON products.product_id = sales.product_id""",{"p_id":p_id,"name":name,"sold":sold,"sp":sp,"bp":bp})
-#         cur.fetchall()
-#         prof= int(sp-bp)
-#         print(prof)
+@app.route('/stock/<int:x>')
+def profit(x):
+    if request.method=='post':
+        cur=conn.cursor()
+        p_id=request.form['product_id']
+        name=request.form['product_name']
+        sold=request.form['quantity_sold']
+        bp=request.form['buying_price']
+        sp=request.form['selling_price']
+        cur.execute(""" SELECT products.product_id=%(p_id)s, products.product_name=%(name)s,sales.quantity_sold=%(sold)s,selling_price=%(sp)s,buying_price=%(bp)s from products join sales ON products.product_id = sales.product_id""",{"p_id":p_id,"name":name,"sold":sold,"sp":sp,"bp":bp})
+        cur.fetchall()
+        prof= int(sp-bp)
+        print(prof)
     
 
-#         if sp>bp:
-#             prof=sp-bp
-#             print("you have a profit of",prof)
+        if sp>bp:
+            prof=sp-bp
+            print("you have a profit of",prof)
 
-#         elif bp<sp:
-#             loss= bp-sp
-#             print("you have a loss of",loss)
-#         else:
-#             print("you have made neither a profit or a loss")
+        elif bp<sp:
+            loss= bp-sp
+            print("you have a loss of",loss)
+        else:
+            print("you have made neither a profit or a loss")
 
-#         return render_template('stock.html')
+        return render_template('stock.html')
 
 
 
