@@ -5,8 +5,7 @@ import psycopg2
 from werkzeug.utils import redirect
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user,login_required,logout_user,current_user
-from flask_login import LoginManager
+from flask_login import UserMixin, LoginManager, login_user,login_required,logout_user,current_user
 from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash, check_password_hash #for storing a password in a secure way. hash func has no inverse.
 
@@ -92,7 +91,6 @@ def create_database(app):
 
 
 @app.route('/')
-@login_required
 def index():
     return render_template('index.html')
     
@@ -163,6 +161,7 @@ def sign_up():
 
 
 @app.route('/products', methods=["POST","GET"])
+@login_required
 def products():
     if request.method=="POST":
         cur=conn.cursor()
@@ -187,6 +186,7 @@ def products():
 
 
 @app.route('/sales', methods=['POST','GET'])
+@login_required
 def sales():
     cur=conn.cursor()
     cur.execute("""SELECT * FROM sales""")
@@ -228,6 +228,7 @@ def view_sales(x):
 
 
 @app.route('/product',methods=['GET','POST'])
+@login_required
 def edit_products():
    if request.method== 'POST': 
     cur = conn.cursor()
@@ -246,6 +247,7 @@ def edit_products():
      
 
 @app.route('/stock',methods=['POST','GET'])
+@login_required
 def stock():
     cur=conn.cursor()
     cur.execute(""" SELECT products.product_id, products.product_name,sales.quantity_sold,selling_price,buying_price from products join sales ON products.product_id = sales.product_id""")
@@ -253,6 +255,7 @@ def stock():
     return render_template('stock.html')
 
 @app.route('/stock/<int:x>')
+@login_required
 def profit(x):
     if request.method=='post':
         cur=conn.cursor()
@@ -291,6 +294,7 @@ def profit(x):
 
 
 @app.route('/insights')
+@login_required
 def insights():
     cur= conn.cursor()
     cur.execute("""SELECT quantity, product_name FROM sales""")
