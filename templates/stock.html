@@ -113,9 +113,9 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col"> product_ID</th>
+                            <th scope="col"> product_id</th>
                             <th scope="col">product_name</th>
-                            <th scope="col">quantity_remaining</th>
+                            <th scope="col">quantity</th>
                             <th scope="col">quantity_sold</th>
                             <th scope="col">buying_price</th>
                             <th scope="col"> selling_price</th>
@@ -126,16 +126,16 @@
                     <tbody>
                         {% for i in rows %}
                         <tr>
-                            <td scope="row" data-label="product_id">{{i[0]}}}</td>
-                            <td data-label="sales_id">{{i[1]}}</td>
-                            <td data-label="product_name">{{i[2]}}</td>
-                            <td data-label="buying_price">{{i[3]}}</td>
+                            <td scope="row" data-label="product_id">{{i[0]}}</td>
+                            <td data-label="product_name">{{i[1]}}</td>
+                            <td data-label="quantity">{{i[2]}}</td>
+                            <td data-label="quantity_sold">{{i[3]}}</td>
                             <td data-label="selling_price">{{i[4]}}</td>
-                            <td data-label="quantity_sold">{{i[5]}}</td>
+                            <td data-label="buying_price">{{i[5]}}</td>
                             <td data-label="profit/loss">
                                 <!-- Button trigger modal -->
                 <div class="text-center">                   
-<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#statickBackdrop1{{i[0]}}">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#statickBackdrop1{{i[0]}}">
    <a href="/stock/{{i[0]}}"></a> profit
   </button>
 </div>
@@ -155,6 +155,11 @@
                 </div>
                 <div class="mb-3">
                     <input type="hidden" value="{{i[1]}}" name="product_name">
+                </div>
+                <div class="mb-3">
+                    <label for=" " class="form-label">quantity</label>
+                    <input type="number" class="form-control" name="quantity"
+                        id="quantity">
                 </div>
                 <div class="mb-3">
                     <label for=" " class="form-label">quantity_sold</label>
@@ -195,130 +200,6 @@
                     </tbody>
                 </table>
             </div>
-
-
-
-
-
-  <!-- table end -->
-    <!-- footer -->
-    <footer class="footer-section">
-        <div class="container">
-            <div class="footer-cta pt-5 pb-5">
-                <div class="row">
-                    <div class="col-xl-4 col-md-4 mb-30">
-                        <div class="single-cta">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <div class="cta-text">
-                                <h4>Find us</h4>
-                                <span>1010 Avenue, sw 54321, chandigarh</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-4 mb-30">
-                        <div class="single-cta">
-                            <i class="fas fa-phone"></i>
-                            <div class="cta-text">
-                                <h4>Call us</h4>
-                                <span>9876543210 0</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-4 mb-30">
-                        <div class="single-cta">
-                            <i class="far fa-envelope-open"></i>
-                            <div class="cta-text">
-                                <h4>Mail us</h4>
-                                <span>mail@info.com</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-content pt-5 pb-5">
-                <div class="row">
-                    <div class="col-xl-4 col-lg-4 mb-50">
-                        <div class="footer-widget">
-                            <div class="footer-logo">
-                                <a href="index.html"><img src="/static/images/favicon.ico" class="img-fluid" alt="logo"></a>
-                            </div>
-                            <div class="footer-text">
-                                <p>Lorem ipsum dolor sit amet, consec tetur adipisicing elit, sed do eiusmod tempor incididuntut consec tetur adipisicing
-                                elit,Lorem ipsum dolor sit amet.</p>
-                            </div>
-                            <div class="footer-social-icon">
-                                <span>Follow us</span>
-                                <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
-                                <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-                                <a href="#"><i class="fab fa-google-plus-g google-bg"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 mb-30">
-                        <div class="footer-widget">
-                            <div class="footer-widget-heading">
-                                <h3>Useful Links</h3>
-                            </div>
-                            <ul>
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">about</a></li>
-                                <li><a href="#">services</a></li>
-                                <li><a href="#">portfolio</a></li>
-                                <li><a href="#">Contact</a></li>
-                                <li><a href="#">About us</a></li>
-                                <li><a href="#">Our Services</a></li>
-                                <li><a href="#">Expert Team</a></li>
-                                <li><a href="#">Contact us</a></li>
-                                <li><a href="#">Latest News</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
-                        <div class="footer-widget">
-                            <div class="footer-widget-heading">
-                                <h3>Subscribe</h3>
-                            </div>
-                            <div class="footer-text mb-25">
-                                <p>Don’t miss to subscribe to our new feeds, kindly fill the form below.</p>
-                            </div>
-                            <div class="subscribe-form">
-                                <form action="#">
-                                    <input type="text" placeholder="Email Address">
-                                    <button><i class="fab fa-telegram-plane"></i></button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="copyright-area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-6 col-lg-6 text-center text-lg-left">
-                        <div class="copyright-text">
-                            <p>Copyright &copy; 2022, All Right Reserved <a href="https://tony-c-ndirangu.herokuapp.com">VEGA</a></p>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6 d-none d-lg-block text-right">
-                        <div class="footer-menu">
-                            <ul>
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">Terms</a></li>
-                                <li><a href="#">Privacy</a></li>
-                                <li><a href="#">Policy</a></li>
-                                <li><a href="#">Contact</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- footer -->
-    
-
-
 
 
     <!-- Option 1: Bootstrap Bundle with Popper -->

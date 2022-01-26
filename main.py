@@ -250,21 +250,24 @@ def edit_products():
 @login_required
 def stock():
     cur=conn.cursor()
-    cur.execute(""" SELECT products.product_id, products.product_name,sales.quantity_sold,selling_price,buying_price from products join sales ON products.product_id = sales.product_id""")
-    cur.fetchall()
-    return render_template('stock.html')
+    cur.execute("""SELECT product_id,product_name,quantity,quantity_sold,buying_price,selling_price FROM stocks""")
+    conn.commit()
+    rows=cur.fetchall()
+    print(rows)
+    return render_template('stock.html',rows=rows)
 
 @app.route('/stock/<int:x>')
 @login_required
-def profit(x):
+def profit():
     if request.method=='post':
         cur=conn.cursor()
         p_id=request.form['product_id']
         name=request.form['product_name']
+        quantity=request.form['quantity']
         sold=request.form['quantity_sold']
         bp=request.form['buying_price']
         sp=request.form['selling_price']
-        cur.execute(""" SELECT products.product_id=%(p_id)s, products.product_name=%(name)s,sales.quantity_sold=%(sold)s,selling_price=%(sp)s,buying_price=%(bp)s from products join sales ON products.product_id = sales.product_id""",{"p_id":p_id,"name":name,"sold":sold,"sp":sp,"bp":bp})
+        cur.execute()
         cur.fetchall()
         prof= int(sp-bp)
         print(prof)
@@ -297,7 +300,7 @@ def profit(x):
 @login_required
 def insights():
     cur= conn.cursor()
-    cur.execute("""SELECT quantity, product_name FROM sales""")
+    cur.execute("""SELECT quantity_sold, product_name FROM sales""")
     data=cur.fetchall()
     # print(data)
     # values=[data[0][0]]
