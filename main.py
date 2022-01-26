@@ -189,7 +189,7 @@ def products():
 @login_required
 def sales():
     cur=conn.cursor()
-    cur.execute("""SELECT * FROM sales""")
+    cur.execute("""SELECT sales_id, product_id,product_name,quantity_sold, created_at FROM sales""")
     x=cur.fetchall()
     print(x)
    
