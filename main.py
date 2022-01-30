@@ -107,7 +107,7 @@ def login():
             if check_password_hash(user.password,password):
                 flash("Logged in successfully!", category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('index'))
+                return redirect(url_for('dashboard'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -147,11 +147,15 @@ def sign_up():
             new_user= User(email=email, first_name=first_name,password=generate_password_hash(password1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
-            login_user(user, remember=True)
+            login_user(user=new_user, remember=True)
             flash('Account created. WELCOME TO VEGA TECH!', category='success')
-            return redirect(url_for('index'))
+            return redirect(url_for('dashboard'))
 
     return render_template("sign_up.html", user=current_user)
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 
 
@@ -307,8 +311,7 @@ def insights():
     # labels=[data[0][1]]
     values=[row[0] for row in data]
     labels=[row[1] for row in data]
-    print("this is values",values)
-    print("this is labels",labels)
+  
 
     
     
@@ -322,13 +325,8 @@ def insights():
 
 
 
-# @app.route('/delete')
-# def delete():
-#     cur=conn.cursor()
-#     cur.execute("""DROP TABLE sales""")
-#     cur.execute("""DROP TABLE sales""")
-#     conn.commit()
-#     return redirect(url_for('/'))
+
+
     
 
 if __name__ == '__main__':

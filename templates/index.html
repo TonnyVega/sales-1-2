@@ -114,9 +114,16 @@
                             <li>
                                 <a href="#pricing">Pricing</a>
                             </li>
-                            <li>
-                                <a href="/login">login</a>
+                            {% if current_user.is_authenticated %}
+                            <li class="nav-item">
+                              <a class="nav-link" href="{{url_for('logout')}}" tabindex="-1" aria-disabled="false">Logout</a>
                             </li>
+                            {% else %}
+                            <li class="nav-item">
+                              <a class="nav-link" href="{{url_for('login')}}" tabindex="-1" aria-disabled="false">Login</a>
+                            </li>
+                            {% endif %}
+                          </ul>
                         </ul>
                     </nav>
                     <!--End of Main Navigation-->
