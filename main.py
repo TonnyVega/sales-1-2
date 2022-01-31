@@ -1,6 +1,6 @@
 from itertools import product
 from unicodedata import category
-from flask import Flask, redirect, render_template, request, url_for, session,flash
+from flask import Flask, jsonify, redirect, render_template, request, url_for, session,flash
 import psycopg2
 from werkzeug.utils import redirect
 from datetime import timedelta
@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user,login_required,logout_user,current_user
 from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash, check_password_hash #for storing a password in a secure way. hash func has no inverse.
-
+import json
 
 
 
@@ -153,9 +153,39 @@ def sign_up():
 
     return render_template("sign_up.html", user=current_user)
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET','POST'])
 def dashboard():
-    return render_template('dashboard.html')
+    if request.method == 'POST':
+        note = request.form.get('note')
+
+        if len(note) < 1:
+            flash('Note is too short!', category='error')
+        else:
+            new_note = Note(data=note, user_id=current_user.id)
+            db.session.add(new_note)
+            db.session.commit()
+            flash('Note added!', category='success')
+
+    return render_template("dashboard.html", user=current_user)
+    
+   
+
+
+@app.route('/delete-note', methods=['POST'])
+def delete_note():
+    note=json.loads(request.data)
+    noteId=note['noteId']
+    note=Note.query.get(noteId)
+    if note:
+        if note.user_id == current_user.id:
+            db.session.delete(note)
+            db.session.commit()
+           
+           
+    return jsonify({})
+
+
+
 
 
 
