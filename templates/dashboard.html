@@ -5,8 +5,46 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Dashboard</title>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </head>
+
+<style>
+  *{
+    margin:0;
+    padding: 0;
+  }
+ 
+  .hover ul li{
+      display: inline-block;
+  }
+  .hover ul li a{
+      font-size: 40px;
+      color:black;
+      margin: 0px 10px;
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: gold;
+      transition: all .6s ease;
+    }
+
+    .hover ul li:hover a {
+      border-radius: 50%;
+      background: #000;
+      transform: rotate(360deg);
+    } 
+
+
+</style>
+
+
+
+
 {% block content%}
 <body>
     <h2>User Dashboard </h2>
@@ -40,7 +78,16 @@
     <button type="submit" class="btn btn-primary">Add Note</button>
   </div>
 </form>
-
+<br />
+<div class="hover">
+  <ul>
+    <li><a href="/products"><ion-icon name="phone-portrait-outline"></ion-icon></a></li>
+    <li><a href="/sales"><ion-icon name="card-outline"></ion-icon></a></li>
+    <li><a href="/insights"><ion-icon name="contrast-outline"></ion-icon></a></li>
+    <li><a href="/stock"><ion-icon name="laptop-outline"></ion-icon></a></li>
+    
+  </ul>
+</div>
 
 <script type="text/javascript" src="/static/js/main.js"></script>
 </body>

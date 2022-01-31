@@ -284,40 +284,37 @@ def edit_products():
 @login_required
 def stock():
     cur=conn.cursor()
-    cur.execute("""SELECT product_id,product_name,quantity,quantity_sold,buying_price,selling_price FROM stocks""")
-    conn.commit()
+    cur.execute("""SELECT products.product_id,products.product_name,products.quantity,sales.quantity_sold, products.selling_price,products.buying_price FROM products JOIN sales ON products.product_id= sales.product_id""")
     rows=cur.fetchall()
-    print(rows)
+    rows=rows
+    # print(rows)
+    p_id=[row[0] for row in rows]
+    name=[row[1] for row in rows]
+    quantity=[row[2] for row in rows]
+    sold=[row[3] for row in rows]
+    bp=[row[4] for row in rows]
+    sp=[row[5] for row in rows]
+    # print(p_id,name,quantity,sold,bp,sp, "these are the rows")
+    cur=conn.cursor()
+    cur.execute("""INSERT INTO stocks(product_id,product_name,quantity,quantity_sold,selling_price,buying_price) VALUES (%(p_id)s,%(name)s,%(quantity)s,%(sold)s,%(sp)s,%(bp)s)""",{"p_id":p_id,"name":name,"quantity":quantity,"sold":sold,"bp":bp,"sp":sp})
+    conn.commit()
+        
     return render_template('stock.html',rows=rows)
 
-@app.route('/stock/<int:x>')
+   
+@app.route('/profit',methods= ['GET','POST'])
 @login_required
 def profit():
     if request.method=='post':
         cur=conn.cursor()
-        p_id=request.form['product_id']
-        name=request.form['product_name']
-        quantity=request.form['quantity']
-        sold=request.form['quantity_sold']
-        bp=request.form['buying_price']
-        sp=request.form['selling_price']
-        cur.execute()
-        cur.fetchall()
-        prof= int(sp-bp)
-        print(prof)
+       
+        cur.execute("""SELECT quantity_sold, selling_price,buying_price FROM stocks""")
+        raw=cur.fetchall()
+        print(raw)
     
+    return render_template('stock.html')
 
-        if sp>bp:
-            prof=sp-bp
-            print("you have a profit of",prof)
 
-        elif bp<sp:
-            loss= bp-sp
-            print("you have a loss of",loss)
-        else:
-            print("you have made neither a profit or a loss")
-
-        return render_template('stock.html')
 
 
 
